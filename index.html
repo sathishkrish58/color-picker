@@ -9,20 +9,25 @@
 </head>
 
 <body>
-    <input class="color-input" type="color" value="#ffffff" id="color-input" />
+    <div class="container">
+        <div class="color-container" data-color-picker>
+            <div data-color-preview class="color-preview"></div>
+            <input class="color-input" type="text" value="#FFFFFF" />
+        </div>
 
-    <input class="color-input" type="color" value="#ffffff" id="color-input2" />
+        <div class="color-container" data-color-picker>
+            <div data-color-preview class="color-preview"></div>
+            <input class="color-input" type="text" value="#FFFFFF" />
+        </div>
+    </div>
 
     <script>
-        document.getElementById('color-input').addEventListener('click', function (event) {
-            event.preventDefault();
-            colorPicker.showDialog(this);
-        });
-
-        document.getElementById('color-input2').addEventListener('click', function (event) {
-            event.preventDefault();
-            colorPicker.showDialog(this);
-        });
+        document.querySelectorAll('[data-color-picker]').forEach(el => {
+            el.addEventListener('click', function (event) {
+                event.preventDefault();
+                colorPicker.showDialog(this);
+            });
+        })
 
     </script>
 

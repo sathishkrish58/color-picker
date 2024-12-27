@@ -104,17 +104,38 @@
             this.hexInput.addEventListener("input", this.updateHexFromInput.bind(this));
 
             this.saveButton.addEventListener('click', (e) => {
-                this.referenceElement.value = this.color.hex;
+                this.updateReferenceElementValue();
                 this.colorPickerDialog.style.display = 'none';
             })
+            
     
             // Close the dialog when clicking outside
             document.addEventListener('click', function (event) {
 
-                if (!_this.colorPickerDialog.contains(event.target) && event.target !== _this.referenceElement) {
+                const refElem = event.target.closest('[data-color-picker]')
+                if (!_this.colorPickerDialog.contains(event.target) && refElem !== _this.referenceElement) {
                     _this.colorPickerDialog.style.display = 'none';
+
+                }
+
+                if(_this.referenceElement && !refElem) {
+                    const colorInput = _this.referenceElement.querySelector('input');
+                    colorInput.disabled = false;
+               //     _this.referenceElement = null;
                 }
             });
+        }
+
+        updateReferenceElementValue() {
+            const colorInput = this.referenceElement.querySelector('input');
+            const colorpreview = this.referenceElement.querySelector('[data-color-preview]');
+            colorInput.value = this.color.hex.toUpperCase();
+            colorInput.disabled = false;
+            if(colorpreview) {
+                colorpreview.style.backgroundColor = this.color.hex;
+            }
+
+
         }
     
         updateColorPalette() {
@@ -210,8 +231,15 @@
         }
     
         showDialog(refElem) {
+            if(!refElem.hasAttribute('data-color-picker')) {
+                return;
+            }
+
             this.referenceElement = refElem;
-            this.color.hex = refElem.value;
+            const colorInput = refElem.querySelector('input');
+            colorInput.disabled = true;
+
+            this.color.hex = colorInput.value;
             this.setDefaultValues();
 
             const rect = refElem.getBoundingClientRect();

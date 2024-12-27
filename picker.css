@@ -5,11 +5,37 @@ body {
     background-color: #f0f0f0;
 }
 
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+}
+
+.color-container {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    border: 1px solid #c5c5c5;
+    border-radius: 5px;
+}
+
+.color-preview {
+    width: 50px;
+    height: 40px;
+    border-right: 1px solid #cfcfcf;
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+
 .color-input {
     inline-size: 100px;
     padding: 0;
     /* pointer-events: none; */
     position: relative;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
 }
 
 .color-picker-container {
