@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Color Picker</title>
+    <link rel="stylesheet" href="picker.css">
+</head>
+
+<body>
+    <input class="color-input" type="color" value="#ffffff" id="color-input" />
+
+    <input class="color-input" type="color" value="#ffffff" id="color-input2" />
+
+    <script>
+        document.getElementById('color-input').addEventListener('click', function (event) {
+            event.preventDefault();
+            colorPicker.showDialog(this);
+        });
+
+        document.getElementById('color-input2').addEventListener('click', function (event) {
+            event.preventDefault();
+            colorPicker.showDialog(this);
+        });
+
+    </script>
+
+    <script src="picker.js"></script>
+</body>
+
+</html>
