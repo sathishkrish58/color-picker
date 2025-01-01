@@ -3,15 +3,16 @@
     class ColorPicker {
         constructor() {
             this.color = { hue: 0, opacity: 1, hex: "#FFFFFF" };
-            this.predefinedColors = [
-                '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff',
-                '#00ffff', '#000000', '#f5b4b4', '#800000', '#808000',
-                '#008000', '#800080', '#008080', '#c0c0c0', '#ffa500',
-                '#a52a2a', '#8a2be2', '#5f9ea0'
-            ];
-
-            this.addHTML();
-            this.init();
+            this.default_options = {
+                opacity_enabled: true,
+                save_button: 'Save',
+                predefinded_colors: [
+                    '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff',
+                    '#00ffff', '#000000', '#f5b4b4', '#800000', '#808000',
+                    '#008000', '#800080', '#008080', '#c0c0c0', '#ffa500',
+                    '#a52a2a', '#8a2be2', '#5f9ea0'
+                ]
+            };
         }
 
         addHTML() {
@@ -24,16 +25,17 @@
     <div class="rgb-slider" id="rgb-slider">
         <div class="dragger" id="rgb-dragger"></div>
     </div>
-    <div class="opacity-slider" id="opacity-slider">
+    ${this.default_options.opacity_enabled == true ?
+                    `<div class="opacity-slider" id="opacity-slider">
         <div class="dragger" id="opacity-dragger"></div>
-    </div>
-
+    </div>`
+                    : ``}
     <div class="predefined-colors" id="predefined-colors"></div>
 
     <div class="color-info">
         <input class="hex-value" type="text" id="hex-value" value="#FFFFFF">
         <div class="color-round" id="color-round"></div>
-        <button id="save-button" class="save-button">Save</button>
+        <button id="save-button" class="save-button">${this.default_options.save_button}</button>
     </div>
 </div>`;
 
@@ -41,7 +43,13 @@
 
         }
 
-        init() {
+        generateColorPicker() {
+            let pickerDialog = document.getElementById('color-picker-dialog');
+            if (!pickerDialog) {
+                this.addHTML();
+                pickerDialog = document.getElementById('color-picker-dialog');
+            }
+
             this.colorPickerDialog = document.getElementById('color-picker-dialog');
             this.colorPalette = document.getElementById("color-palette");
             this.rgbSlider = document.getElementById("rgb-slider");
@@ -51,9 +59,11 @@
             this.hexInput = document.getElementById("hex-value");
             this.colorRound = document.getElementById("color-round");
             this.paletteDragger = document.getElementById("color-palette-dragger");
-            this.predefinedColorsContainer = document.getElementById('predefined-colors');
             this.saveButton = document.getElementById('save-button');
 
+            if (this.default_options.theme) {
+                this.colorPickerDialog.classList.add(this.default_options.theme);
+            }
             this.populatePredefinedColors();
             this.attachEventListeners();
             this.isRGBDragger = false;
@@ -62,22 +72,25 @@
         }
 
         populatePredefinedColors() {
-            this.predefinedColors.forEach(colorCode => {
+            const predefinedColorsContainer = document.getElementById('predefined-colors');
+
+            this.default_options.predefinded_colors.forEach(colorCode => {
                 const colorDiv = document.createElement('div');
                 colorDiv.style.backgroundColor = colorCode;
                 colorDiv.className = 'predefined-color';
                 colorDiv.onclick = () => {
 
                     const inputHue = this.hexaToHsl(colorCode);
+                    this.color.hex = colorCode;
                     this.color.hue = inputHue.h;
                     this.color.saturation = inputHue.s
                     this.color.lightness = inputHue.l
-        
+
                     this.updateColorPalette();
                     this.updateOpacityDisplay();
                     this.updateRGBDraggerPosition();
                 };
-                this.predefinedColorsContainer.appendChild(colorDiv);
+                predefinedColorsContainer.appendChild(colorDiv);
             });
         }
 
@@ -102,30 +115,30 @@
                 });
             });
 
-
-
-
             // Click event for opacity-slider
-            this.opacitySlider.addEventListener("click", (event) => {
-                this.opacitySliderHandler(event);
-            });
+            if (this.opacitySlider) {
+                this.opacitySlider.addEventListener("click", (event) => {
+                    this.opacitySliderHandler(event);
+                });
+            }
+
+            if (this.opacityDragger) {
+                // Dragger-specific mousedown event for opacity-dragger
+                this.opacityDragger.addEventListener("mousedown", (event) => {
+                    event.stopPropagation(); // Prevent conflict with slider mousedown
+                    this.isOpacityDragger = true;
+                    document.addEventListener("mousemove", this.opacityDraggerHandler.bind(this));
+                    document.addEventListener("mouseup", () => {
+                        if (!this.isOpacityDragger) return;
+
+                        this.isOpacityDragger = false;
+                        document.removeEventListener("mousemove", this.opacityDraggerHandler.bind(this));
+                    });
+                });
+            }
 
             // Dragger-specific mousedown event for opacity-dragger
-            this.opacityDragger.addEventListener("mousedown", (event) => {
-                event.stopPropagation(); // Prevent conflict with slider mousedown
-                this.isOpacityDragger = true;
-                document.addEventListener("mousemove", this.opacityDraggerHandler.bind(this));
-                document.addEventListener("mouseup", () => {
-                    if (!this.isOpacityDragger) return;
-
-                    this.isOpacityDragger = false;
-                    document.removeEventListener("mousemove", this.opacityDraggerHandler.bind(this));
-                });
-            });
-
-
-             // Dragger-specific mousedown event for opacity-dragger
-             this.paletteDragger.addEventListener("mousedown", (event) => {
+            this.paletteDragger.addEventListener("mousedown", (event) => {
                 event.stopPropagation(); // Prevent conflict with slider mousedown
                 this.isPaletteDragger = true;
                 document.addEventListener("mousemove", this.paletteDraggerHandler.bind(this));
@@ -138,7 +151,7 @@
             });
 
 
-            this.colorPalette.addEventListener('click', (e) =>{
+            this.colorPalette.addEventListener('click', (e) => {
                 const rect = this.colorPalette.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
@@ -149,7 +162,11 @@
             this.hexInput.addEventListener("input", this.updateHexFromInput.bind(this));
 
             this.saveButton.addEventListener('click', (e) => {
-                this.updateReferenceElementValue();
+                this.referenceElement.setAttribute('data-value', this.color.hex);
+                //  this.referenceElement.value = this.color.hex;
+                this.pickerElement.style.backgroundColor = this.color.hex;
+                this.pickerElement.setAttribute('data-picker-value', this.color.hex);
+                this.triggerChange();
                 this.colorPickerDialog.style.display = 'none';
             })
 
@@ -157,30 +174,13 @@
             // Close the dialog when clicking outside
             document.addEventListener('click', function (event) {
 
-                const refElem = event.target.closest('[data-color-picker]')
-                if (!_this.colorPickerDialog.contains(event.target) && refElem !== _this.referenceElement) {
+                const refElem = event.target.closest('[data-picker-element]')
+                if (!_this.colorPickerDialog.contains(event.target) && refElem !== _this.pickerElement) {
                     _this.colorPickerDialog.style.display = 'none';
 
                 }
 
-                if (_this.referenceElement && !refElem) {
-                    const colorInput = _this.referenceElement.querySelector('input');
-                    // colorInput.disabled = false;
-                    //     _this.referenceElement = null;
-                }
             });
-        }
-
-        updateReferenceElementValue() {
-            const colorInput = this.referenceElement.querySelector('input');
-            const colorpreview = this.referenceElement.querySelector('[data-color-preview]');
-            colorInput.value = this.color.hex.toUpperCase();
-            // colorInput.disabled = false;
-            if (colorpreview) {
-                colorpreview.style.backgroundColor = this.color.hex;
-            }
-
-
         }
 
         updateColorPalette() {
@@ -191,7 +191,7 @@
             const rect = this.colorPalette.getBoundingClientRect();
             const xPos = (this.color.saturation / 100) * rect.width; // Horizontal position based on saturation
             const yPos = (1 - this.color.lightness / 100) * rect.height; // Vertical position based on lightness
-              
+
             this.paletteDragger.style.left = `${xPos}px`;
             this.paletteDragger.style.top = `${yPos}px`;
         }
@@ -236,13 +236,13 @@
         }
 
         paletteDraggerHandler(e) {
-            if(!this.isPaletteDragger) return;
+            if (!this.isPaletteDragger) return;
 
             const rect = this.colorPalette.getBoundingClientRect();
             const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
             const y = Math.max(0, Math.min(e.clientY - rect.top, rect.height));
             this.moveDragger(x, y);
-            this.updateColorFromDragger(e.clientX, e.clientY); 
+            this.updateColorFromDragger(e.clientX, e.clientY);
             this.updateOpacityColor();
         }
 
@@ -254,11 +254,26 @@
         updateColorFromDragger = (xRatio, yRatio) => {
 
             const rect = this.colorPalette.getBoundingClientRect();
-            const x = xRatio - rect.left;
-            const y = yRatio - rect.top;
+            let x = xRatio - rect.left;
+            let y = yRatio - rect.top;
 
-            const saturation = (x / rect.width) * 100; // Horizontal axis for saturation
-            const lightness = 100 - (y / rect.height) * 100; // Vertical axis for lightness
+
+            if (x < 0) {
+                x = 0;
+            }
+            if (y < 0) {
+                y = 0;
+            }
+
+            let saturation = (x / rect.width) * 100; // Horizontal axis for saturation
+            let lightness = 100 - (y / rect.height) * 100; // Vertical axis for lightness
+
+            if (lightness < 0) {
+                lightness = 0;
+            }
+            if (saturation > 100) {
+                saturation = 100;
+            }
 
             this.color.saturation = saturation;
             this.color.lightness = lightness;
@@ -285,9 +300,18 @@
         }
 
         updateHexFromInput() {
-            if (/^#[0-9A-Fa-f]{6}$/.test(this.hexInput.value)) {
+            if (/^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/.test(this.hexInput.value)) {
                 this.color.hex = this.hexInput.value;
-                this.colorRound.style.backgroundColor = this.color.hex;
+                // this.colorRound.style.backgroundColor = this.color.hex;
+
+                const inputHue = this.hexaToHsl(this.hexInput.value);
+                this.color.hue = inputHue.h;
+                this.color.saturation = inputHue.s
+                this.color.lightness = inputHue.l
+
+                this.updateColorPalette();
+                this.updateOpacityDisplay();
+                this.updateRGBDraggerPosition();
             }
         }
 
@@ -317,13 +341,17 @@
         }
 
         updateOpacityColor() {
-            this.opacitySlider.style.background = `linear-gradient(to right, rgba(0, 0, 0, 0), hsla(${this.color.hue}, 100%, 50%, 1)`;
+            if(this.opacitySlider) {
+                this.opacitySlider.style.background = `linear-gradient(to right, rgba(0, 0, 0, 0), hsla(${this.color.hue}, 100%, 50%, 1)`;
+            }
         }
 
         updateOpacityDisplay() {
-            this.opacityDragger.style.left = `${this.color.opacity * 100}%`;
+            if(this.opacityDragger) {
+                this.opacityDragger.style.left = `${this.color.opacity * 100}%`;
+            }
             let hexValue = this.color.hex;
-           
+
             this.updateOpacityColor();
             this.updateColorDisplay(hexValue);
         }
@@ -345,7 +373,7 @@
         hexaToHsl = (hex) => {
             const shorthandRegex = /^#([a-f\d])([a-f\d])([a-f\d])([a-f\d]?)$/i;
             hex = hex.replace(shorthandRegex, (m, r, g, b, a) => r + r + g + g + b + b + (a ? a + a : ''));
-        
+
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(hex);
             const rgb = result ? {
                 r: parseInt(result[1], 16),
@@ -358,7 +386,7 @@
             return this.rgbToHsl(rgb)
         };
 
-        rgbToHsl = ({r, g, b}) => {
+        rgbToHsl = ({ r, g, b }) => {
             r /= 255; g /= 255; b /= 255;
             const max = Math.max(r, g, b), min = Math.min(r, g, b);
             let h, s, l = (max + min) / 2;
@@ -383,23 +411,65 @@
             };
         };
 
+        triggerChange() {
+            const event = new Event('change', { bubbles: true });
+            this.referenceElement.dispatchEvent(event);
+        }
 
-        showDialog(refElem) {
+        init(options) {
+            if (!options.container) {
+                return;
+            }
+
+            const isSameContainer = this.default_options.container == options.container;
+            if(isSameContainer) {
+                document.getElementById('color-picker-dialog').remove();
+            }
+            Object.assign(this.default_options, options);
+            this.generateColorPicker();
+
+            if(!isSameContainer) {
+                options.container.querySelectorAll('[data-color-picker]').forEach(el => {
+                    const colorElem = document.createElement('div');
+                    const refValue = colorElem.getAttribute('data-value') || el.value;
+                    colorElem.className = 'color-element'
+                    colorElem.setAttribute('data-picker-value', refValue);
+                    colorElem.setAttribute('data-picker-element', true);
+                    colorElem.onclick = () => {
+                        options.container.querySelectorAll('.selected[data-picker-element]').forEach(selEl => {
+                            selEl.classList.remove('selected');
+                        });
+                        colorElem.classList.add('selected');
+                        this.openPickerDialog(el, colorElem);
+                    }
+    
+                    colorElem.style.backgroundColor = el.value;
+                    el.parentElement.appendChild(colorElem);
+                    el.style.display = 'none';
+                })
+            }
+            
+        }
+
+
+        openPickerDialog(refElem, pickerElement) {
             if (!refElem.hasAttribute('data-color-picker')) {
                 return;
             }
 
             this.referenceElement = refElem;
-            const colorInput = refElem.querySelector('input');
-            const inputHue = this.hexaToHsl(colorInput.value);
+            this.pickerElement = pickerElement;
 
-            this.color.hex = colorInput.value;
+            const colorValue = pickerElement.getAttribute('data-picker-value');
+            const inputHue = this.hexaToHsl(colorValue);
+
+            this.color.hex = colorValue;
             this.color.hue = inputHue.h;
             this.color.saturation = inputHue.s
             this.color.lightness = inputHue.l
 
-            const rect = refElem.getBoundingClientRect();
-            this.colorPickerDialog.style.top = `${rect.bottom + 4}px`;
+            const rect = pickerElement.getBoundingClientRect();
+            this.colorPickerDialog.style.top = `${pickerElement.offsetTop + rect.height + 4}px`;
             this.colorPickerDialog.style.left = rect.left + 'px';
             this.colorPickerDialog.style.display = 'flex';
 

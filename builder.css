@@ -1,0 +1,30 @@
+
+.builder-options {
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    border: 1px solid #cbcbcb;
+    background-color: #ffffff;
+    margin-block-end: 10px;
+}
+
+.builder-option {
+    margin: 5px;
+}
+
+.builder-options input {
+    margin: 5px;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    background-color: #ffffff;
+    height: calc(100vh - 85px);
+    padding-block-start: 5px;
+    padding-inline-start: 12px;
+}
+
+
+

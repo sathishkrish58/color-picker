@@ -5,29 +5,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Color Picker</title>
+    <link rel="stylesheet" href="builder.css">
     <link rel="stylesheet" href="picker.css">
 </head>
 
 <body>
-    <div class="container">
-        <div class="color-container" data-color-picker>
-            <div data-color-preview class="color-preview"></div>
-            <input class="color-input" type="text" value="#FFFFFF" />
+    <div class="builder-options">
+        <div class="builder-option">
+            <label for="enabled_opacity">Enable Opacity</label>
+            <input type="checkbox" id="enabled_opacity" checked>    
         </div>
+    </div>
+    <div id="colorContianer" class="container">
+        <input id="colorinput" data-color-picker class="color-input" type="text" value="#FFFFFF" />
 
-        <div class="color-container" data-color-picker>
-            <div data-color-preview class="color-preview"></div>
-            <input class="color-input" type="text" value="#FFFFFF" />
-        </div>
+        <input id="colorinput2" data-color-picker class="color-input" type="text" value="#333333" />
     </div>
 
     <script>
-        document.querySelectorAll('[data-color-picker]').forEach(el => {
-            el.addEventListener('click', function (event) {
-                event.preventDefault();
-                colorPicker.showDialog(this);
-            });
-        })
+
+        document.addEventListener("DOMContentLoaded", (event) => {
+
+            const enabledOpacity = document.getElementById('enabled_opacity');
+            colorPicker.init({
+                container: document.getElementById('colorContianer'),
+                "theme": 'large',
+                "opacity_enabled": enabledOpacity.checked,
+            })
+
+
+            enabledOpacity.onchange = function () {
+                colorPicker.init({
+                    container: document.getElementById('colorContianer'),
+                    "theme": 'large',
+                    "opacity_enabled": enabledOpacity.checked,
+                })
+            };
+
+             // Add an onchange listener
+             document.querySelectorAll('[data-color-picker]').forEach(el => {
+                el.addEventListener('change', (e) => {
+                    console.log('valuessss', e.target, e.target.value);
+                });
+             })
+        });
+
 
     </script>
 

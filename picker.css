@@ -5,13 +5,6 @@ body {
     background-color: #f0f0f0;
 }
 
-.container {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-
-}
-
 .color-container {
     display: flex;
     flex-direction: row;
@@ -20,12 +13,15 @@ body {
     border-radius: 5px;
 }
 
-.color-preview {
-    width: 50px;
-    height: 40px;
-    border-right: 1px solid #cfcfcf;
-    background-color: #ffffff;
-    border-radius: 5px;
+.color-element {
+    width: 120px;
+    height: 30px;
+    border: 1px solid #c3c3c3;
+}
+
+.color-element.selected {
+    border-color: #4949ff;
+    box-shadow: 2px 2px 5px gray;
 }
 
 .color-input {
@@ -42,26 +38,27 @@ body {
     position: absolute;
     display: none;
     justify-content: space-between;
-    padding: 15px;
+    padding-inline: 12px;
+    padding-block: 8px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 20%;
-    margin: auto;
+    width: 15%;
     flex-direction: column;
     border: 1px solid #d3d3d3;
+    z-index: 100;
 
 }
 
 .predefined-colors {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 5px;
 }
 
 .predefined-colors div {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     border-radius: 5px;
     cursor: pointer;
 }
