@@ -25,6 +25,8 @@ git clone https://github.com/sathishkrish58/color-picker.git
 ```
 ---
 
+### 2. Include required files
+
 Add the following lines to include the necessary CSS and JS files into your project:
 
 ```
@@ -32,20 +34,39 @@ Add the following lines to include the necessary CSS and JS files into your proj
 <script src="./picker.js"></script>
 ```
 ---
+## Usage
+
+### 1. Initialize the color picker in JavaScript
 
 Create an instance of the color picker in your JavaScript code:
 
 ```javascript
 colorPicker.init({
     container: 'containerlement,
-    "theme": 'large',
     "opacity_enabled": true
 })
 ```
----
-# Screenshot
-<img src="./images/color-picker.png" alt="Color Picker" width="100px">
 
+### 2. Customize the appearance and behavior
+
+You can customize the color picker with options like initial color, supported color formats, and theme:
+
+```javascript
+colorPicker.init({
+    container: document.getElementById('colorPickerContainer'),
+    formats: ['hex', 'rgb'], // Color formats supported
+    theme: 'dark', // Use dark theme for the picker
+    opacity_enabled: false
+    onChange: (color) => {
+        document.body.style.backgroundColor = color; // Apply color to body background
+    },
+});
+```
 ---
-## Builder
-<img src="./images/color-picker-builder.png" alt="Color Picker Builder" width="150px">
+
+## Screenshots
+
+<div style="display: flex; justify-content: space-between;">
+<img src="./images/color-picker.png" alt="Color Picker" width="150px" height="150px">
+<img src="./images/color-picker-builder.png" alt="Color Picker Builder" width="150px" height="150px">
+</div>
