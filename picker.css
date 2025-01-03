@@ -1,16 +1,42 @@
+/* Light Mode Theme */
+:root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --border-color: #cccccc;
+    --button-bg: #4CAF50;
+    --button-hover-bg: #d5d5d5;
+    --color-palette-bg: #f5f5f5;
+    --color-palette-dragger: #ffffff;
+    --predefined-color-border: #bbbbbb;
+    --opacity-slider-bg: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+    --opacity-dragger-bg: #ffffff;
+    --draggger-border-color: #000000;
+    --hexa-input-bg: #ffffff;
+    --preview-border: #000000;
+}
+
+/* Dark Mode Theme */
+[data-theme="dark"] {
+    --background-color: #2b2b2b;
+    --text-color: #ffffff;
+    --border-color: #555555;
+    --button-bg: #4a4a4a;
+    --button-hover-bg: #5a5a5a;
+    --color-palette-bg: #3a3a3a;
+    --color-palette-dragger: #66ccff;
+    --predefined-color-border: #777777;
+    --opacity-slider-bg: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+    --opacity-dragger-bg: #66ccff;
+    --draggger-border-color: #ffffff;
+    --hexa-input-bg: #3a3a3a;
+    --preview-border: #ffffff;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
     background-color: #f0f0f0;
-}
-
-.color-container {
-    display: flex;
-    flex-direction: row;
-    gap: 5px;
-    border: 1px solid #c5c5c5;
-    border-radius: 5px;
 }
 
 .color-element {
@@ -40,14 +66,14 @@ body {
     justify-content: space-between;
     padding-inline: 12px;
     padding-block: 8px;
-    background-color: #fff;
+    background-color: var(--background-color);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 15%;
     flex-direction: column;
-    border: 1px solid #d3d3d3;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
     z-index: 100;
-
 }
 
 .predefined-colors {
@@ -60,14 +86,16 @@ body {
     width: 20px;
     height: 20px;
     border-radius: 5px;
+    border: 2px solid var(--predefined-color-border);
     cursor: pointer;
 }
 
 .color-palette {
     width: 100%;
     height: 150px;
-    border-radius: 5px;
+    border-radius: 6px;
     position: relative;
+    background-color: var(--color-palette-bg);
     cursor: pointer;
     margin-bottom: 15px;
     transition: background 0.3s;
@@ -76,11 +104,12 @@ body {
 .color-palette-dragger {
     width: 15px;
     height: 15px;
-    background-color: #ffffff;
+    background-color: var(--color-palette-dragger);
     border-radius: 50%;
     position: absolute;
     transform: translate(-50%, -50%);
-    border: 2px solid black;
+    border: 2px solid var(--draggger-border-color);
+    cursor: pointer;
 }
 
 .rgb-slider,
@@ -100,14 +129,25 @@ body {
     background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
 }
 
-.dragger {
-    width: 20px;
-    height: 20px;
-    background-color: white;
+.rgb-dragger {
+    width: 18px;
+    height: 18px;
+    background-color: var(--opacity-dragger-bg);
     border-radius: 50%;
     position: absolute;
     transform: translate(-50%, -50%);
-    border: 2px solid black;
+    border: 2px solid var(--draggger-border-color);
+    top: 50%;
+}
+
+.opacity-dragger {
+    width: 18px;
+    height: 18px;
+    background-color: var(--opacity-dragger-bg);
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    border: 2px solid var(--draggger-border-color);
     top: 50%;
 }
 
@@ -122,10 +162,11 @@ body {
     font-size: 16px;
     width: 120px;
     text-align: center;
-    border: 1px solid #ccc;
     padding: 5px;
     border-radius: 5px;
-    color: #5f5e5e;
+    background-color: var(--hexa-input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
 }
 
 .color-round {
@@ -134,17 +175,20 @@ body {
     border-radius: 50%;
     border: 2px solid #ccc;
     background-color: #FFFFFF;
+    border: 2px solid var(--preview-border);
+
 }
 
 .save-button {
-    background-color: #4CAF50;
-    color: white;
     padding: 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    text-align: center;
 }
 
 .save-button:hover {
-    background-color: #45a049;
+    background-color: var(--button-hover-bg);
 }

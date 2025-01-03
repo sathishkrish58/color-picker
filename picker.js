@@ -4,6 +4,7 @@
         constructor() {
             this.color = { hue: 0, opacity: 1, hex: "#FFFFFF" };
             this.default_options = {
+                theme: 'light',
                 opacity_enabled: true,
                 save_button: 'Save',
                 predefinded_colors: [
@@ -23,11 +24,11 @@
         <div class="color-palette-dragger" id="color-palette-dragger"></div>
     </div>
     <div class="rgb-slider" id="rgb-slider">
-        <div class="dragger" id="rgb-dragger"></div>
+        <div class="rgb-dragger" id="rgb-dragger"></div>
     </div>
     ${this.default_options.opacity_enabled == true ?
                     `<div class="opacity-slider" id="opacity-slider">
-        <div class="dragger" id="opacity-dragger"></div>
+        <div class="opacity-dragger" id="opacity-dragger"></div>
     </div>`
                     : ``}
     <div class="predefined-colors" id="predefined-colors"></div>
@@ -61,11 +62,10 @@
             this.paletteDragger = document.getElementById("color-palette-dragger");
             this.saveButton = document.getElementById('save-button');
 
-            if (this.default_options.theme) {
-                this.colorPickerDialog.classList.add(this.default_options.theme);
-            }
             this.populatePredefinedColors();
             this.attachEventListeners();
+
+            this.colorPickerDialog.setAttribute('data-theme', this.default_options.theme)
             this.isRGBDragger = false;
             this.isOpacityDragger = false;
             this.isPaletteDragger = false;

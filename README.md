@@ -10,9 +10,10 @@ A lightweight and customizable JavaScript color picker, designed to replace the 
 - **Real-time color preview** and updates as you select a color.
 - **Lightweight** and easy to integrate into any project.
 - Fully **responsive** and **mobile-friendly** design.
-- Custom **themes** (light/dark).
+- **Light and Dark Mode Support**: Users can toggle between light and dark themes.
+- **Optional Opacity Adjustment**: A slider to adjust the opacity (can be toggled on/off).
+- **Save Button**: Saves the selected color.
 
----
 
 ## Installation
 
@@ -36,18 +37,35 @@ Add the following lines to include the necessary CSS and JS files into your proj
 ---
 ## Usage
 
-### 1. Initialize the color picker in JavaScript
+### HTML Structure
+
+```html
+<div class="native-color-picker">
+    <input type="color" value="#ffffff">
+</div>
+```
+
+### Initialize the color picker in JavaScript
 
 Create an instance of the color picker in your JavaScript code:
 
 ```javascript
 colorPicker.init({
+    theme: 'light',
     container: 'containerlement,
-    "opacity_enabled": true
+    opacity_enabled: true
 })
 ```
 
-### 2. Customize the appearance and behavior
+### Optional Opacity Slider
+
+To enable or disable the opacity slider
+
+```javascript
+    opacity_enabled: false
+```
+
+### Customize the appearance and behavior
 
 You can customize the color picker with options like initial color, supported color formats, and theme:
 
@@ -57,9 +75,6 @@ colorPicker.init({
     formats: ['hex', 'rgb'], // Color formats supported
     theme: 'dark', // Use dark theme for the picker
     opacity_enabled: false
-    onChange: (color) => {
-        document.body.style.backgroundColor = color; // Apply color to body background
-    },
 });
 ```
 ---
@@ -67,6 +82,15 @@ colorPicker.init({
 ## Screenshots
 
 <div style="display: flex; justify-content: space-between;">
-<img src="./images/color-picker.png" alt="Color Picker" width="150px" height="150px">
+<img src="./images/color-picker-light.png" alt="Color Picker" width="150px" height="150px">
+<img src="./images/color-picker-dark.png" alt="Color Picker" width="150px" height="150px">
 <img src="./images/color-picker-builder.png" alt="Color Picker Builder" width="150px" height="150px">
 </div>
+
+## Contribution
+
+Contributions are welcome! Feel free to open issues or submit pull requests to enhance the functionality or fix bugs.
+
+## License
+
+This project is open-source and licensed under the [MIT License](LICENSE).

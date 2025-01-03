@@ -12,6 +12,10 @@
 <body>
     <div class="builder-options">
         <div class="builder-option">
+            <label for="enabled_opacity">Theme</label>
+            <input type="checkbox" id="builder_theme" checked>    
+        </div>
+        <div class="builder-option">
             <label for="enabled_opacity">Enable Opacity</label>
             <input type="checkbox" id="enabled_opacity" checked>    
         </div>
@@ -27,20 +31,19 @@
         document.addEventListener("DOMContentLoaded", (event) => {
 
             const enabledOpacity = document.getElementById('enabled_opacity');
-            colorPicker.init({
-                container: document.getElementById('colorContianer'),
-                "theme": 'large',
-                "opacity_enabled": enabledOpacity.checked
-            })
-
-
-            enabledOpacity.onchange = function () {
+            const theme = document.getElementById('builder_theme');
+           
+            function changeDialog(e) {
                 colorPicker.init({
                     container: document.getElementById('colorContianer'),
-                    "theme": 'large',
+                    "theme": theme.checked ? 'light' : 'dark',
                     "opacity_enabled": enabledOpacity.checked,
                 })
-            };
+            }
+
+            changeDialog();
+            enabledOpacity.onchange = changeDialog;
+            theme.onchange = changeDialog;
 
              // Add an onchange listener
              document.querySelectorAll('[data-color-picker]').forEach(el => {
